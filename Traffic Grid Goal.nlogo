@@ -788,10 +788,10 @@ NIL
 0
 
 BUTTON
-750
-100
-872
-133
+680
+45
+802
+78
 NIL
 alternate-lights\n
 NIL
@@ -805,10 +805,10 @@ NIL
 1
 
 BUTTON
-770
-200
-882
-233
+685
+95
+797
+128
 NIL
 uniform-lights
 NIL
@@ -819,6 +819,16 @@ NIL
 NIL
 NIL
 NIL
+1
+
+TEXTBOX
+695
+15
+845
+33
+Setup Modifications\n
+11
+0.0
 1
 
 @#$#@#$#@
