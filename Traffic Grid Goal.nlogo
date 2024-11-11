@@ -36,6 +36,7 @@ patches-own
   my-phase        ;; the phase for the intersection.  -1 for non-intersection patches.
   auto?           ;; whether or not this intersection will switch automatically.
                   ;; false for non-intersection patches.
+  uniform-lights?
 ]
 
 
@@ -142,7 +143,9 @@ to setup-intersections
     set auto? true
     set my-row floor ((pycor + max-pycor) / grid-y-inc)
     set my-column floor ((pxcor + max-pxcor) / grid-x-inc)
+    set uniform-lights? false
     set-signal-colors
+
   ]
 end
 
@@ -190,6 +193,29 @@ to alternate-lights
 
 
 end
+
+to uniform-lights
+
+  ask intersections [
+    ifelse power? [
+      ifelse green-light-up? [
+        ask patch-at -1 0 [ set pcolor green ]
+        ask patch-at 0 1 [ set pcolor green ]
+      ]
+      [
+        ask patch-at -1 0 [ set pcolor green ]
+        ask patch-at 0 1 [ set pcolor green ]
+      ]
+    ]
+    [
+      ask patch-at -1 0 [ set pcolor white ]
+      ask patch-at 0 1 [ set pcolor white ]
+    ]
+    set uniform-lights? true
+  ]
+end
+
+
 
 
 
@@ -260,18 +286,8 @@ end
 ;; have the traffic lights change color if phase equals each intersections' my-phase
 to set-signals
   ask intersections with [ auto? and phase = floor ((my-phase * ticks-per-cycle) / 100) ] [
-    ifelse dynamic-lights?
-    [ifelse count turtles-here >= 10
-      [set pcolor black
-
-      ]
-      []
-    ]
-
-    [set green-light-up? (not green-light-up?)
-      set-signal-colors
-
-    ]
+    set green-light-up? (not green-light-up?)
+    set-signal-colors
   ]
 end
 
@@ -279,6 +295,7 @@ end
 ;; traffic lights to have the green light up or the green light to the left.
 to set-signal-colors  ;; intersection (patch) procedure
   ifelse power? [
+    ifelse not uniform-lights? [
     ifelse green-light-up? [
       ask patch-at -1 0 [ set pcolor red ]
       ask patch-at 0 1 [ set pcolor green ]
@@ -287,6 +304,22 @@ to set-signal-colors  ;; intersection (patch) procedure
       ask patch-at -1 0 [ set pcolor green ]
       ask patch-at 0 1 [ set pcolor red ]
     ]
+
+    ]
+
+
+    [
+    ifelse green-light-up? [
+      ask patch-at -1 0 [ set pcolor red ]
+      ask patch-at 0 1 [ set pcolor red ]
+    ]
+    [
+      ask patch-at -1 0 [ set pcolor green ]
+      ask patch-at 0 1 [ set pcolor green ]
+    ]
+    ]
+
+
   ]
   [
     ask patch-at -1 0 [ set pcolor white ]
@@ -360,8 +393,11 @@ end
 
 to change-light-at-current-intersection
   ask current-intersection [
+    ifelse not uniform-lights? [
     set green-light-up? (not green-light-up?)
     set-signal-colors
+    ]
+    [set-signal-colors]
   ]
 end
 
@@ -558,7 +594,7 @@ num-cars
 num-cars
 1
 400
-45.0
+192.0
 1
 1
 NIL
@@ -758,6 +794,23 @@ BUTTON
 133
 NIL
 alternate-lights\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+770
+200
+882
+233
+NIL
+uniform-lights
 NIL
 1
 T
