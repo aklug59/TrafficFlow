@@ -9,10 +9,12 @@ globals
   current-intersection     ;; the currently selected intersection
 
   ;; patch agentsets
-  intersections ;; agentset containing the patches that are intersections
-  roads         ;; agentset containing the patches that are roads
+  intersections            ;; agentset containing the patches that are intersections
+  roads                    ;; agentset containing the patches that are roads
   dynamic-lights?
-  max-wait-time ;; global maximum wait time of any turtle
+  max-individual-wait-time ;; global maximum wait time of any turtle
+  curr-max-avg-wait-time   ;; iterative maximum average wait time of all turtles
+  max-avg-wait-time        ;; global maximum average wait time of all turtles
 ]
 
 turtles-own
@@ -153,7 +155,9 @@ end
 ;; Initialize the turtle variables to appropriate values and place the turtle on an empty road patch.
 to setup-cars  ;; turtle procedure
   set speed 0
-  set max-wait-time 0
+  set max-individual-wait-time 0
+  set max-avg-wait-time 0
+  set curr-max-avg-wait-time 0
   set wait-time 0
   put-on-empty-road
   ifelse intersection? [
@@ -398,12 +402,25 @@ to record-data  ;; turtle procedure
   ifelse speed = 0 [
     set num-cars-stopped num-cars-stopped + 1
     set wait-time wait-time + 1
-    ifelse wait-time > max-wait-time[
-      set max-wait-time wait-time
+    set curr-max-avg-wait-time mean [wait-time] of turtles
+
+
+    ifelse wait-time > max-individual-wait-time [
+      set max-individual-wait-time wait-time
     ]
     []
   ]
   [ set wait-time 0 ]
+
+  ifelse curr-max-avg-wait-time >= max-avg-wait-time [
+  set max-avg-wait-time curr-max-avg-wait-time
+
+  ]
+
+
+  []
+  ;;set max-avg-wait-time mean [wait-time] of turtles
+
 end
 
 to change-light-at-current-intersection
@@ -609,7 +626,7 @@ num-cars
 num-cars
 1
 400
-189.0
+283.0
 1
 1
 NIL
@@ -866,10 +883,21 @@ NIL
 MONITOR
 505
 580
-597
+652
 625
 NIL
-max-wait-time
+max-individual-wait-time
+17
+1
+11
+
+MONITOR
+60
+765
+177
+810
+NIL
+max-avg-wait-time
 17
 1
 11
