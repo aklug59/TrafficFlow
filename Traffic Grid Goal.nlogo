@@ -12,6 +12,7 @@ globals
   intersections ;; agentset containing the patches that are intersections
   roads         ;; agentset containing the patches that are roads
   dynamic-lights?
+  max-wait-time ;; global maximum wait time of any turtle
 ]
 
 turtles-own
@@ -152,6 +153,7 @@ end
 ;; Initialize the turtle variables to appropriate values and place the turtle on an empty road patch.
 to setup-cars  ;; turtle procedure
   set speed 0
+  set max-wait-time 0
   set wait-time 0
   put-on-empty-road
   ifelse intersection? [
@@ -173,9 +175,6 @@ to setup-emergency-vehicle
   ask one-of turtles [
   set color red
   ]
-
-
-
 
 end
 
@@ -387,6 +386,7 @@ end
 
 ;; set the color of the car to a different color based on how fast the car is moving
 to set-car-color  ;; turtle procedure
+
   ifelse speed < (speed-limit / 2)
     [ set color blue ]
     [ set color cyan - 2 ]
@@ -398,6 +398,10 @@ to record-data  ;; turtle procedure
   ifelse speed = 0 [
     set num-cars-stopped num-cars-stopped + 1
     set wait-time wait-time + 1
+    ifelse wait-time > max-wait-time[
+      set max-wait-time wait-time
+    ]
+    []
   ]
   [ set wait-time 0 ]
 end
@@ -495,11 +499,11 @@ end
 GRAPHICS-WINDOW
 327
 10
-650
-334
+875
+559
 -1
 -1
-9.0
+15.43
 1
 15
 1
@@ -520,10 +524,10 @@ ticks
 30.0
 
 PLOT
-453
-377
-671
-552
+10
+580
+228
+755
 Average Wait Time of Cars
 Time
 Average Wait
@@ -538,10 +542,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot mean [wait-time] of turtles"
 
 PLOT
-228
-377
-444
-552
+255
+580
+471
+755
 Average Speed of Cars
 Time
 Average Speed
@@ -605,7 +609,7 @@ num-cars
 num-cars
 1
 400
-30.0
+189.0
 1
 1
 NIL
@@ -799,10 +803,10 @@ NIL
 0
 
 BUTTON
-680
-45
-802
-78
+1080
+90
+1202
+123
 NIL
 alternate-lights\n
 NIL
@@ -816,10 +820,10 @@ NIL
 1
 
 BUTTON
-685
-95
-797
-128
+1085
+140
+1197
+173
 NIL
 uniform-lights
 NIL
@@ -833,20 +837,20 @@ NIL
 1
 
 TEXTBOX
-695
-15
-845
-33
+1095
+60
+1245
+78
 Setup Modifications\n
 11
 25.0
 1
 
 BUTTON
-660
-145
-837
-178
+1060
+190
+1237
+223
 NIL
 setup-emergency-vehicle
 NIL
@@ -858,6 +862,17 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+505
+580
+597
+625
+NIL
+max-wait-time
+17
+1
+11
 
 @#$#@#$#@
 ## ACKNOWLEDGMENT
