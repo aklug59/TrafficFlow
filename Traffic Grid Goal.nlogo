@@ -169,6 +169,17 @@ to setup-cars  ;; turtle procedure
     [ set heading 90 ]
 end
 
+to setup-emergency-vehicle
+  ask one-of turtles [
+  set color red
+  ]
+
+
+
+
+end
+
+
 ;; Find a road patch without any turtles on it and place the turtle there.
 to put-on-empty-road  ;; turtle procedure
   move-to one-of roads with [ not any? turtles-on self ]
@@ -594,7 +605,7 @@ num-cars
 num-cars
 1
 400
-192.0
+30.0
 1
 1
 NIL
@@ -828,7 +839,24 @@ TEXTBOX
 33
 Setup Modifications\n
 11
-0.0
+25.0
+1
+
+BUTTON
+660
+145
+837
+178
+NIL
+setup-emergency-vehicle
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
 1
 
 @#$#@#$#@
