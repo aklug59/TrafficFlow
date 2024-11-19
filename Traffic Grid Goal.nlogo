@@ -344,18 +344,32 @@ end
 ;; set the turtles' speed based on whether they are at a red traffic light or the speed of the
 ;; turtle (if any) on the patch in front of them
 to set-car-speed  ;; turtle procedure
+  ifelse color = red [emergency-lights]
 
-
+  [
   ifelse pcolor = red [
-    ifelse color = red [ask patch-here [set pcolor green]]
-    [set speed 0]
+    set speed 0
   ]
   [
     ifelse up-car?
       [ set-speed 0 -1 ]
       [ set-speed 1 0 ]
   ]
+  ]
+
 end
+
+to emergency-lights
+
+  ask patches in-radius 2 with [pcolor = red] [set pcolor green]
+
+  ifelse up-car?
+      [ set-speed 0 -1 ]
+      [ set-speed 1 0 ]
+
+
+end
+
 
 ;; set the speed variable of the turtle to an appropriate value (not exceeding the
 ;; speed limit) based on whether there are turtles on the patch in front of the turtle
@@ -630,7 +644,7 @@ num-cars
 num-cars
 1
 400
-283.0
+278.0
 1
 1
 NIL
