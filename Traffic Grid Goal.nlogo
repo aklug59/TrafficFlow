@@ -367,7 +367,22 @@ to emergency-lights
       [ set-speed 0 -1 ]
       [ set-speed 1 0 ]
 
+  gtf-outta-my-way
 
+end
+
+
+
+to gtf-outta-my-way
+
+  ask other turtles in-radius 2 [
+    let target-patch min-one-of (patches in-radius 5 with [pcolor = brown + 3]) [distance myself]
+    move-to target-patch
+    ifelse up-car?
+      [ set-speed 0 -1 ]
+      [ set-speed 1 0 ]
+
+  ]
 end
 
 
@@ -644,7 +659,7 @@ num-cars
 num-cars
 1
 400
-278.0
+110.0
 1
 1
 NIL
