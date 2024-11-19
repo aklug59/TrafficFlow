@@ -347,7 +347,7 @@ to set-car-speed  ;; turtle procedure
 
 
   ifelse pcolor = red [
-    ifelse color = red [ask patch-here [set pcolor green]]
+    ifelse color = red [ask patch-here [set color green]
     [set speed 0]
   ]
   [
